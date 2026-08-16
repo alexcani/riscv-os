@@ -1,5 +1,7 @@
 CC = riscv64-unknown-elf-gcc
+CXX = riscv64-unknown-elf-g++
 CFLAGS = -march=rv64g -mabi=lp64 -mcmodel=medany -ffreestanding -O2 -Wall -Wextra
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 LDFLAGS = -T linker.ld -nostdlib
 
 PROJECT = kernel.elf
@@ -23,8 +25,11 @@ $(BUILD_DIR)/entry.o: entry.S | $(BUILD_DIR)
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 run: $(BUILD_DIR)/$(PROJECT)
 	qemu-system-riscv64 -machine virt -nographic -kernel $<
 
 clean:
-	rm -rf $(BUILD_DIR)/*
+	rm -rf $(BUILD_DIR)
