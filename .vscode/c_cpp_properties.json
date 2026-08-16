@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "RISC-V",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "compilerPath": "riscv64-unknown-elf-gcc",
+            "compilerArgs": [
+                "-march=rv64g",
+                "-mabi=lp64",
+                "-mcmodel=medany",
+                "-ffreestanding"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++23",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
