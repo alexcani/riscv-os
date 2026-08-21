@@ -6,7 +6,7 @@ LDFLAGS = -T linker.ld -nostdlib
 
 PROJECT = kernel.elf
 BUILD_DIR = build
-OBJECTS = entry.o main.o
+OBJECTS = entry.o main.o trap.o
 
 _BUILDDIR_OBJS = $(addprefix $(BUILD_DIR)/,$(OBJECTS))
 
@@ -21,6 +21,9 @@ $(BUILD_DIR)/$(PROJECT): $(_BUILDDIR_OBJS) | $(BUILD_DIR)
 
 $(BUILD_DIR)/entry.o: entry.S | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c entry.S -o $@
+
+$(BUILD_DIR)/trap.o: trap.S | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c trap.S -o $@
 
 $(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
