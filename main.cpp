@@ -1,4 +1,5 @@
 #include "console.hpp"
+#include "trap_frame.h"
 #include "types.hpp"
 
 extern "C" void __asm_init_trap_handler();
@@ -26,16 +27,20 @@ extern "C" void kmain(uint64 hartid, [[maybe_unused]] void *dtb) {
     }
 }
 
-extern "C" void khandle_trap(uint64 scause, uint64 sepc, uint64 stval, uint64 sstatus) {
+extern "C" void khandle_trap(TrapFrame *frame) {
     kprint("Trap occurred!\n");
     kprint("scause: ");
-    kprint_hex(scause);
+    kprint_hex(frame->scause);
     kprint("\nsepc: ");
-    kprint_hex(sepc);
+    kprint_hex(frame->sepc);
     kprint("\nstval: ");
-    kprint_hex(stval);
+    kprint_hex(frame->stval);
     kprint("\nsstatus: ");
-    kprint_hex(sstatus);
+    kprint_hex(frame->sstatus);
+    kprint("\nx1: ");
+    kprint_hex(frame->gpr.x1);
+    kprint("\nx31: ");
+    kprint_hex(frame->gpr.x31);
     for (;;) {
     }
 }
