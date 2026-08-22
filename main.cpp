@@ -20,7 +20,7 @@ extern "C" void kmain(uint64 hartid, [[maybe_unused]] void *dtb) {
     // Cause a trap to test the handler
     asm volatile("ebreak");
 
-    kprint("Error, trap returned");
+    kprint("Returned from trap!\n");
 
     for (;;) {
         // Infinite loop to prevent the program from exiting
@@ -41,6 +41,10 @@ extern "C" void khandle_trap(TrapFrame *frame) {
     kprint_hex(frame->gpr.x1);
     kprint("\nx31: ");
     kprint_hex(frame->gpr.x31);
-    for (;;) {
-    }
+    kprint("\n");
+
+    // Advance sepc by 4 bytes to skip the ebreak.
+    // In the future this needs logic based on the
+    // trap type, etc...
+    frame->sepc += 4;
 }
