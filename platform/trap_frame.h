@@ -1,3 +1,5 @@
+#ifndef PLATFORM_TRAP_FRAME_H
+#define PLATFORM_TRAP_FRAME_H
 #ifndef TRAP_FRAME_H
 #define TRAP_FRAME_H
 
@@ -48,8 +50,8 @@
 
 #define DWORD_REGISTER(name, alias) \
     union {                         \
-        uint64 name;                \
-        uint64 alias;               \
+        uint64_t name;                \
+        uint64_t alias;               \
     };
 
 struct GeneralPurposeRegisters {
@@ -88,10 +90,10 @@ struct GeneralPurposeRegisters {
 
 struct TrapFrame {
     // CSRs
-    uint64 sstatus;
-    uint64 sepc;
-    uint64 scause;
-    uint64 stval;
+    uint64_t sstatus;
+    uint64_t sepc;
+    uint64_t scause;
+    uint64_t stval;
     // Registers
     GeneralPurposeRegisters gpr;
 };
@@ -101,3 +103,6 @@ static_assert(sizeof(TrapFrame) == TF_SIZE);
 #endif  // __ASM__
 
 #endif  // TRAP_FRAME_H
+
+
+#endif // PLATFORM_TRAP_FRAME_H

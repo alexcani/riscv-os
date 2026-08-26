@@ -1,12 +1,12 @@
 #include "console.hpp"
-#include "trap_frame.h"
+#include "platform/trap_frame.h"
 #include "types.hpp"
 
 extern "C" void __asm_init_trap_handler();
 
 void kinit_trap_handler() { __asm_init_trap_handler(); }
 
-extern "C" void kmain(uint64 hartid, [[maybe_unused]] void *dtb) {
+extern "C" void kmain(uint64_t hartid, [[maybe_unused]] void *dtb) {
     const char *message = "Hello world! from hart ";
     for (const char *p = message; *p != '\0'; p++) {
         *uart = *p;

@@ -7,15 +7,18 @@ project(risotto
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(COMMON_FLAGS "-ffreestanding -Wall -Wextra")
+set(COMMON_FLAGS "-ffreestanding -Wall -Wextra -nolibc -nostdlib")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMMON_FLAGS} -fno-exceptions -fno-rtti")
 
 add_executable(risotto
     main.cpp
-    trap.S
-    entry.S
+    platform/trap.S
+    platform/entry.S
+    mm/allocator.cpp
 )
+
+target_include_directories(risotto PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_target_properties(risotto PROPERTIES LINK_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/linker.ld")
 set_target_properties(risotto PROPERTIES SUFFIX ".elf")

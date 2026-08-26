@@ -5,7 +5,7 @@
 
 volatile char *uart = (volatile char *)0x10000000;
 
-char toAsci(uint64 value) {
+char toAsci(uint64_t value) {
     if (value < 10) {
         return '0' + value;
     } else {
@@ -19,10 +19,10 @@ void kprint(const char *message) {
     }
 }
 
-void kprint_hex(uint64 value) {
+void kprint_hex(uint64_t value) {
     kprint("0x");
     for (int i = 60; i >= 0; i -= 4) {
-        uint64 nibble = (value >> i) & 0xF;
+        uint64_t nibble = (value >> i) & 0xF;
         *uart = toAsci(nibble);
     }
 }
