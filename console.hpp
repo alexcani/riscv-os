@@ -3,9 +3,9 @@
 
 #include "types.hpp"
 
-volatile char *uart = (volatile char *)0x10000000;
+inline volatile char *uart = (volatile char *)0x10000000;
 
-char toAsci(uint64_t value) {
+inline char toAsci(uint64_t value) {
     if (value < 10) {
         return '0' + value;
     } else {
@@ -13,13 +13,13 @@ char toAsci(uint64_t value) {
     }
 }
 
-void kprint(const char *message) {
+inline void kprint(const char *message) {
     for (const char *p = message; *p != '\0'; p++) {
         *uart = *p;
     }
 }
 
-void kprint_hex(uint64_t value) {
+inline void kprint_hex(uint64_t value) {
     kprint("0x");
     for (int i = 60; i >= 0; i -= 4) {
         uint64_t nibble = (value >> i) & 0xF;

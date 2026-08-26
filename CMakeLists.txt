@@ -26,6 +26,6 @@ target_link_options(risotto PRIVATE "-T${CMAKE_CURRENT_SOURCE_DIR}/linker.ld" -n
 
 # Run the kernel in QEMU
 add_custom_target(run
-    COMMAND qemu-system-riscv64 -machine virt -nographic -kernel $<TARGET_FILE:risotto>
+    COMMAND qemu-system-riscv64 -machine virt -m 512M -nographic -kernel $<TARGET_FILE:risotto>
     DEPENDS risotto
 )

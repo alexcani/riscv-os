@@ -1,8 +1,10 @@
 #include "console.hpp"
+#include "mm/allocator.hpp"
 #include "platform/trap_frame.h"
 #include "types.hpp"
 
 extern "C" void __asm_init_trap_handler();
+extern "C" uint8_t _kernel_end[];
 
 void kinit_trap_handler() { __asm_init_trap_handler(); }
 
@@ -21,6 +23,13 @@ extern "C" void kmain(uint64_t hartid, [[maybe_unused]] void *dtb) {
     asm volatile("ebreak");
 
     kprint("Returned from trap!\n");
+
+    kprint("Initializing physical page allocator\n");
+    uintptr_t free_ram_end =
+        0x80000000 + 0x20000000;  // 512MB. This will eventually be read from the device tree
+    mm::allocator::initialize(
+        mm::AddressRange{mm::PhysicalAddress{reinterpret_cast<uintptr_t>(_kernel_end)},
+                         mm::PhysicalAddress{free_ram_end}});
 
     for (;;) {
         // Infinite loop to prevent the program from exiting
