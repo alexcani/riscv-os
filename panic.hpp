@@ -12,4 +12,10 @@
     }
 }
 
+void kwarn(const char *msg) {
+    kprint("WARN: ");
+    kprint(msg);
+    kprint("\n");
+}
+
 #endif  // PANIC_HPP
