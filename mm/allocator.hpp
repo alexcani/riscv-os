@@ -1,16 +1,23 @@
 #ifndef MM_ALLOCATOR_HPP
 #define MM_ALLOCATOR_HPP
 
+#include <optional>
+
 #include "types.hpp"
 
 namespace mm {
 
+constexpr uintptr_t PAGE_SIZE = 4096;
+
 class PhysicalAddress {
    public:
+    PhysicalAddress() : value_(0) {}
     explicit constexpr PhysicalAddress(uintptr_t value) : value_(value) {}
 
     constexpr uintptr_t value() const noexcept { return value_; }
     explicit constexpr operator bool() const noexcept { return value_ != 0; }
+
+    auto operator<=>(const PhysicalAddress &) const noexcept = default;
 
    private:
     uintptr_t value_;
@@ -18,6 +25,7 @@ class PhysicalAddress {
 
 class PhysicalPage {
    public:
+    PhysicalPage() = default;
     explicit constexpr PhysicalPage(PhysicalAddress address) : address_(address) {}
 
     constexpr PhysicalAddress address() const noexcept { return address_; }
@@ -43,9 +51,9 @@ class AddressRange {
 };
 
 namespace allocator {
-void initialize(const AddressRange<PhysicalAddress> region);
-PhysicalPage alloc_page();
-void free_page(const PhysicalPage &page);
+void initialize(AddressRange<PhysicalAddress> region);
+std::optional<PhysicalPage> alloc_page();
+void free_page(PhysicalPage page);
 }  // namespace allocator
 
 }  // namespace mm
