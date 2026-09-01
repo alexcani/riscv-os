@@ -1,7 +1,6 @@
 #include "mm/allocator.hpp"
 
-#include <optional>
-
+#include "core/optional.hpp"
 #include "core/util.hpp"
 #include "panic.hpp"
 
@@ -16,7 +15,7 @@ class PhysicalPageAllocator {
 
     void init(mm::AddressRange<mm::PhysicalAddress> region) noexcept;
 
-    std::optional<mm::PhysicalPage> alloc_one() noexcept;
+    core::Optional<mm::PhysicalPage> alloc_one() noexcept;
     void free_one(mm::PhysicalPage page) noexcept;
 
    private:
@@ -26,7 +25,7 @@ class PhysicalPageAllocator {
     // Finds the first free bit in bitmap with a range
     // a and b are word indexes and specify the range range [a, b)
     // If free bit found, return page index of free bit
-    std::optional<pindex_t> bitmap_search_free_in_range(size_t a, size_t b) const;
+    core::Optional<pindex_t> bitmap_search_free_in_range(size_t a, size_t b) const;
 
     // The bitmap holding page metadata
     unsigned long *bitmap_base_ = nullptr;
@@ -60,7 +59,7 @@ void initialize(const AddressRange<PhysicalAddress> region) {
 
     alloc.init(region);
 }
-std::optional<PhysicalPage> alloc_page() { return alloc.alloc_one(); }
+core::Optional<PhysicalPage> alloc_page() { return alloc.alloc_one(); }
 void free_page(PhysicalPage page) { alloc.free_one(page); }
 
 }  // namespace mm::allocator
@@ -121,13 +120,13 @@ void PhysicalPageAllocator::init(mm::AddressRange<mm::PhysicalAddress> region) n
     kprint(" words)\n");
 }
 
-std::optional<mm::PhysicalPage> PhysicalPageAllocator::alloc_one() noexcept {
+core::Optional<mm::PhysicalPage> PhysicalPageAllocator::alloc_one() noexcept {
     if (reserved_pages_ + allocated_pages_ == managed_pages_) {
         kwarn("No free pages");
-        return std::nullopt;
+        return core::nullopt;
     }
 
-    std::optional<pindex_t> page_idx =
+    core::Optional<pindex_t> page_idx =
         bitmap_search_free_in_range(search_hint_word_index_, bm_size_words_);
     if (!page_idx.has_value()) {
         page_idx = bitmap_search_free_in_range(first_searchable_word_, search_hint_word_index_);
@@ -205,15 +204,15 @@ void PhysicalPageAllocator::bitmap_clear_range(pindex_t a, pindex_t b) noexcept 
     bitmap_base_[last_word] &= ~last_mask;
 }
 
-std::optional<pindex_t> PhysicalPageAllocator::bitmap_search_free_in_range(size_t a,
-                                                                           size_t b) const {
-    if (a >= b) return std::nullopt;
-    if (b > bm_size_words_) return std::nullopt;
+core::Optional<pindex_t> PhysicalPageAllocator::bitmap_search_free_in_range(size_t a,
+                                                                            size_t b) const {
+    if (a >= b) return core::nullopt;
+    if (b > bm_size_words_) return core::nullopt;
 
     for (size_t i = a; i < b; ++i) {
         if (bitmap_base_[i] == ~0ul) continue;  // full word
         return i * core::BITS_PER_WORD + __builtin_ctzl(~bitmap_base_[i]);
     }
 
-    return std::nullopt;
+    return core::nullopt;
 }

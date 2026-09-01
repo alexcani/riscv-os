@@ -1,8 +1,9 @@
 #ifndef MM_ALLOCATOR_HPP
 #define MM_ALLOCATOR_HPP
 
-#include <optional>
+#include <compare>
 
+#include "core/optional.hpp"
 #include "types.hpp"
 
 namespace mm {
@@ -52,7 +53,7 @@ class AddressRange {
 
 namespace allocator {
 void initialize(AddressRange<PhysicalAddress> region);
-std::optional<PhysicalPage> alloc_page();
+core::Optional<PhysicalPage> alloc_page();
 void free_page(PhysicalPage page);
 }  // namespace allocator
 
