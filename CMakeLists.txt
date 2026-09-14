@@ -16,6 +16,8 @@ add_executable(risotto
     platform/trap.S
     platform/entry.S
     mm/allocator.cpp
+    core/format.cpp
+    core/formatters/formatters.cpp
 )
 
 target_include_directories(risotto PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

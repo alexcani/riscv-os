@@ -3,19 +3,19 @@
 
 #include "console.hpp"
 
-[[noreturn]] void kpanic(const char *msg) {
-    kprint("PANIC: ");
-    kprint(msg);
-    kprint("\n");
+[[noreturn]] inline void kpanic(const char *msg) {
+    console::puts("PANIC: ");
+    console::puts(msg);
+    console::puts("\n");
     for (;;) {
         asm volatile("wfi");
     }
 }
 
-void kwarn(const char *msg) {
-    kprint("WARN: ");
-    kprint(msg);
-    kprint("\n");
+inline void kwarn(const char *msg) {
+    console::puts("WARN: ");
+    console::puts(msg);
+    console::puts("\n");
 }
 
 #endif  // PANIC_HPP

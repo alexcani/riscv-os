@@ -1,5 +1,6 @@
 #include "mm/allocator.hpp"
 
+#include "core/format.hpp"
 #include "core/optional.hpp"
 #include "core/util.hpp"
 #include "panic.hpp"
@@ -103,21 +104,11 @@ void PhysicalPageAllocator::init(mm::AddressRange<mm::PhysicalAddress> region) n
     // Then free all non-reserved pages
     bitmap_clear_range(reserved_pages_, managed_pages_);
 
-    kprint("Total managed pages: ");
-    kprint_hex(managed_pages_);
-    kprint("\nReserved pages: ");
-    kprint_hex(reserved_pages_);
-    kprint("\nManaged memory: ");
-    kprint_hex(managed_pages_ * mm::PAGE_SIZE / 1024);
-    kprint(" KB\n");
-    kprint("Reserved memory: ");
-    kprint_hex(reserved_pages_ * mm::PAGE_SIZE / 1024);
-    kprint(" KB\n");
-    kprint("Bitmap size: ");
-    kprint_hex(bm_size_bytes_);
-    kprint(" bytes (");
-    kprint_hex(bm_size_words_);
-    kprint(" words)\n");
+    core::kprintf("Total managed pages: {}\n", managed_pages_);
+    core::kprintf("Reserved pages: {}\n", reserved_pages_);
+    core::kprintf("Managed memory: {}KB\n", managed_pages_ * mm::PAGE_SIZE / 1024);
+    core::kprintf("Reserved memory: {}KB\n", reserved_pages_ * mm::PAGE_SIZE / 1024);
+    core::kprintf("Bitmap size: {} bytes ({} words)\n", bm_size_bytes_, bm_size_words_);
 }
 
 core::Optional<mm::PhysicalPage> PhysicalPageAllocator::alloc_one() noexcept {
